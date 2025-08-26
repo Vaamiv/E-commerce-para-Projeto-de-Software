@@ -1,0 +1,3 @@
+ALTER TABLE products ADD COLUMN IF NOT EXISTS image_url VARCHAR(255) NULL AFTER description;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS rating_avg DECIMAL(3,1) NULL AFTER image_url;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS rating_count INT NULL AFTER rating_avg;

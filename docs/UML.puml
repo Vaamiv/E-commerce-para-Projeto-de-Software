@@ -1,0 +1,71 @@
+@startuml
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+package "App" {
+  class "Config::Database" as Database {
+    + getConnection(): PDO
+  }
+
+  interface "Domain::Repository::UserRepositoryInterface" as IUserRepo {
+    + findByEmail(email: string): User
+  }
+  interface "Domain::Repository::ProductRepositoryInterface" as IProductRepo {
+    + all(): Product[]
+    + find(id: int): Product
+    + create(p: Product): int
+    + update(p: Product): bool
+    + delete(id: int): bool
+  }
+
+  class "Infrastructure::Repository::MySQLUserRepository" as MySQLUserRepo
+  class "Infrastructure::Repository::MySQLProductRepository" as MySQLProductRepo
+
+  class "Domain::Entity::User" as User
+  class "Domain::Entity::Product" as Product
+
+  interface "Service::PasswordHasherInterface" as IHasher {
+    + hash(plain: string): string
+    + verify(plain: string, hash: string): bool
+  }
+  class "Service::BcryptHasher" as BcryptHasher
+  class "Service::Argon2Hasher" as Argon2Hasher
+  class "Service::AuthService" as AuthService {
+    + login(email: string, password: string): User
+  }
+  class "Service::ProductService" as ProductService {
+    + list(): Product[]
+    + get(id: int): Product
+    + create(name: string, price: float, desc: ?string): int
+    + update(id: int, name: string, price: float, desc: ?string): bool
+    + delete(id: int): bool
+  }
+
+  class "Http::Container" as Container {
+    + pdo(): PDO
+    + userRepository(): MySQLUserRepo
+    + productRepository(): MySQLProductRepo
+    + passwordHasher(): IHasher
+    + authService(): AuthService
+    + productService(): ProductService
+  }
+
+  Database ..> PDO
+  MySQLUserRepo ..|> IUserRepo
+  MySQLProductRepo ..|> IProductRepo
+  BcryptHasher ..|> IHasher
+  Argon2Hasher ..|> IHasher
+
+  AuthService --> IUserRepo
+  AuthService --> IHasher
+  ProductService --> IProductRepo
+
+  Container --> Database
+  Container --> MySQLUserRepo
+  Container --> MySQLProductRepo
+  Container --> AuthService
+  Container --> ProductService
+
+  User "1" o-- "many" Product : manages >
+}
+@enduml

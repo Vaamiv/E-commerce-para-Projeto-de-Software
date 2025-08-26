@@ -1,0 +1,1 @@
+<?php if($m=flash()): ?><div class='alert alert-success'><?= htmlspecialchars($m) ?></div><?php endif; ?>
