@@ -39,44 +39,14 @@ O objetivo principal não é entregar um sistema completo, mas sim **demonstrar 
 
 ### 🔹 Diagrama de Classes
 Mostra entidades (`User`, `Product`), interfaces de repositório, implementações, serviços, hasher (Strategy), container (Factory/DI) e conexão Singleton.
-```plantuml
-@startuml
-class User
-class Product
-interface UserRepositoryInterface
-interface ProductRepositoryInterface
-UserRepositoryInterface <|.. MySQLUserRepository
-ProductRepositoryInterface <|.. MySQLProductRepository
-AuthService ..> UserRepositoryInterface
-@enduml
+```![diagrama-classes](https://github.com/user-attachments/assets/149151e0-fe60-4767-beb9-c77986b821e2)
+
 ```
 
 ### 🔹 Diagrama ER (Persistência)
 Estrutura de banco relacional focada no escopo do módulo.
-```plantuml
-@startuml
-entity "users" {
-  *id : INT <<PK, AI>>
-  --
-  name : VARCHAR(120)
-  email : VARCHAR(150) <<UNIQUE>>
-  password_hash : VARCHAR(255)
-  role : VARCHAR(20)
-  created_at : TIMESTAMP
-}
-entity "products" {
-  *id : INT <<PK, AI>>
-  --
-  name : VARCHAR(200)
-  price : DECIMAL(10,2)
-  description : TEXT
-  image_url : VARCHAR(255)
-  rating_avg : DECIMAL(3,1)
-  rating_count : INT
-  created_at : TIMESTAMP
-  updated_at : TIMESTAMP
-}
-@enduml
+```![diagrama-ER](https://github.com/user-attachments/assets/e1b32a91-0ee0-4bb6-89ad-c4cee84b5fc3)
+
 ```
 
 ### 🔹 Diagrama de Casos de Uso
@@ -84,74 +54,18 @@ Atores: **Admin**, **Staff**, **Visitante/Cliente**.
 Admin: login, CRUD, cadastrar usuários, logout.  
 Staff: login, CRUD, logout.  
 Visitante: navegar catálogo, buscar produto, ver detalhes.
-```plantuml
-@startuml
-actor Admin
-actor Staff
-actor "Visitante/Cliente" as Cliente
-usecase "Login" as UC1
-usecase "CRUD Produtos" as UC2
-usecase "Cadastrar Usuário" as UC3
-usecase "Logout" as UC4
-usecase "Navegar Catálogo" as UC5
-usecase "Buscar Produto" as UC6
-usecase "Ver Detalhes" as UC7
-Admin --> UC1
-Admin --> UC2
-Admin --> UC3
-Admin --> UC4
-Staff --> UC1
-Staff --> UC2
-Staff --> UC4
-Cliente --> UC5
-Cliente --> UC6
-Cliente --> UC7
-@enduml
+``![diagrama-casos-de-uso](https://github.com/user-attachments/assets/0f069848-be4a-4cd7-956f-e5a1a6d5435d)
+
 ```
 
 ### 🔹 Diagrama de Sequência (Fluxo: Admin cadastra produto)
 Mostra interação entre Admin, UI, Service, Repositório e Banco.
-```plantuml
-@startuml
-actor Admin
-participant "UI (create.php)" as UI
-participant ProductService as Svc
-participant ProductRepositoryInterface as RepoI
-participant MySQLProductRepository as Repo
-database "DB/PDO" as DB
-Admin -> UI : abrir tela criação
-UI -> Svc : submit(form)
-Svc -> RepoI : create(produto)
-RepoI -> Repo : chamada concreta
-Repo -> DB : INSERT INTO products
-DB --> Repo : id gerado
-Repo --> Svc : id
-Svc --> UI : sucesso
-UI --> Admin : redirect p/ lista
-@enduml
+```![diagrama-de-sequencia](https://github.com/user-attachments/assets/0e5d5125-ce9f-4a37-a6d0-475999eb5948)
+
 ```
 
 ---
 
-## 📹 Sugestão de Apresentação
-- **1 min:** Interface (login, dashboard, CRUD, catálogo).  
-- **1 min:** Diagramas ER + Classes.  
-- **2 min:** Código e padrões aplicados (Database Singleton, Strategy de senha, Container DI, DIP).  
-- **1 min:** Considerações finais, melhorias futuras.
-
----
-
-## 📂 Estrutura Recomendada
-```
-commerce-module/
- ├── public/         # arquivos acessados pelo navegador (index.php, login.php, etc.)
- ├── src/            # classes (Domain, Service, Repository, Config, Http)
- ├── database/       # schema.sql e seed.sql
- ├── docs/           # diagramas PlantUML e imagens exportadas
- └── README.md
-```
-
----
 
 ## ✅ Status
 ✔️ Login funcional  
@@ -161,3 +75,5 @@ commerce-module/
 ✔️ Modelagem UML concluída (Classes, ER, Casos de Uso, Sequência)  
 
 ---
+
+## Desenvolvido para fins acadêmicos por Thomás Moojen
